@@ -5,6 +5,7 @@ import { MODULES, CAN_EDIT, REGIONS, REGION_LIST, regionOf } from '../data';
 import { useStore } from '../store';
 function norm(v) { if (v == null) return ''; if (v instanceof Date) return v.toISOString().slice(0,10); return String(v).trim(); }
 function deptKeyOf(m) { const c = m.cols.find(c => c[2] === 'dept'); return c ? c[0] : null; }
+const ADD_LABELS = { visits: 'اضافة زيارة', institutes: 'اضافة متابعة', administrations: 'اضافة متابعة', indicators: 'اضافة مؤشر' };
 export default function ModuleList() {
   const { key } = useParams();
   const m = MODULES[key];
@@ -97,7 +98,7 @@ export default function ModuleList() {
         {(fRegion ? (REGIONS[fRegion] || []) : [...new Set((db[m.table]||[]).map(r=>r[dk]).filter(Boolean))]).map(o=><option key={o} value={o}>{o}</option>)}
       </select>}
       {(fRegion || fDept) && <button className="btn gray" onClick={()=>{setFRegion('');setFDept('');}}>مسح الفلتر</button>}
-      {canEdit && <><Link className="btn" to={`/m/${key}/add`}>+ اضافة جديد</Link>
+      {canEdit && <><Link className="btn" to={`/m/${key}/add`}>+ {ADD_LABELS[key] || 'اضافة جديد'}</Link>
         <input ref={fileRef} type="file" accept=".xlsx,.xls" style={{ display: 'none' }} onChange={doImport} />
         <button className="btn amber" onClick={()=>fileRef.current.click()}>استيراد اكسيل</button></>}
       <button className="btn gray" onClick={doExport}>تصدير اكسيل ({rows.length})</button>
